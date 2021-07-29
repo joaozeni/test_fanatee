@@ -12,12 +12,12 @@ from apis.models.model import db
 paths_blueprint = Blueprint('paths', __name__)
 
 
-@paths_blueprint.route('/insert_path', methods=['POST'])
-def insert_path():
+@paths_blueprint.route('/insert_map', methods=['POST'])
+def insert_map():
     """Insert or update a path to the system
         ---
         parameters:
-            - name: paths
+            - name: map
               in: formData
               type: file
               required: true
@@ -29,7 +29,7 @@ def insert_path():
           400:
             description: returns WRONG_FORMAT if the sent file is not decodable or in not in csv specified
     """
-    paths_file = request.files.get('paths')
+    paths_file = request.files.get('map')
     if not paths_file:
         return {'message': 'NO_FILE'}, 400
     
@@ -107,5 +107,5 @@ def search_path():
                 dist[neighbor_node] = cost+cost_current_neighbor
                 heappush(q, (cost+cost_current_neighbor, neighbor_node, path))
     
-    return 204
+    return 'NO_PATH', 204
 

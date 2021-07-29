@@ -26,8 +26,8 @@ def app():
         db.drop_all()
 
 def test_insert_clean_db(app):
-    data = {'paths':(BytesIO(b'TER,MAR,10\rMAR,LUA,5'), "exemplo.csv")}
-    result = app.test_client().post('/paths/insert_path', content_type='multipart/form-data', data=data)
+    data = {'map':(BytesIO(b'TER,MAR,10\rMAR,LUA,5'), "exemplo.csv")}
+    result = app.test_client().post('/paths/insert_map', content_type='multipart/form-data', data=data)
     assert result.get_json().get('message') == 'OK'
     assert result.status_code == 201
     with app.app_context():
@@ -42,20 +42,20 @@ def test_insert_clean_db(app):
         assert query_results[1][0].cost == 5
 
 def test_insert_file_not_send(app):
-    data = {'paths':(BytesIO(b'TER,MAR,10\rMAR,LUA,5'), "exemplo.csv")}
-    result = app.test_client().post('/paths/insert_path', content_type='multipart/form-data')
+    data = {'map':(BytesIO(b'TER,MAR,10\rMAR,LUA,5'), "exemplo.csv")}
+    result = app.test_client().post('/paths/insert_map', content_type='multipart/form-data')
     assert result.get_json().get('message') == 'NO_FILE'
     assert result.status_code == 400
 
 def test_insert_wrong_format(app):
-    data = {'paths':(BytesIO(b'abcqwerty'), "exemplo.csv")}
-    result = app.test_client().post('/paths/insert_path', content_type='multipart/form-data', data=data)
+    data = {'map':(BytesIO(b'abcqwerty'), "exemplo.csv")}
+    result = app.test_client().post('/paths/insert_map', content_type='multipart/form-data', data=data)
     assert result.get_json().get('message') == 'WRONG_FORMAT'
     assert result.status_code == 400
 
 def test_upsert(app):
-    data = {'paths':(BytesIO(b'TER,PLU,75\rTER,LUA,20'), "exemplo.csv")}
-    result = app.test_client().post('/paths/insert_path', content_type='multipart/form-data', data=data)
+    data = {'map':(BytesIO(b'TER,PLU,75\rTER,LUA,20'), "exemplo.csv")}
+    result = app.test_client().post('/paths/insert_map', content_type='multipart/form-data', data=data)
     assert result.get_json().get('message') == 'OK'
     assert result.status_code == 201
     with app.app_context():
@@ -76,8 +76,8 @@ def test_upsert(app):
         assert query_results[3][0].cost == 20
 
 def test_upsert_repeated(app):
-    data = {'paths':(BytesIO(b'TER,MAR,10\rTER,LUA,20'), "exemplo.csv")}
-    result = app.test_client().post('/paths/insert_path', content_type='multipart/form-data', data=data)
+    data = {'map':(BytesIO(b'TER,MAR,10\rTER,LUA,20'), "exemplo.csv")}
+    result = app.test_client().post('/paths/insert_map', content_type='multipart/form-data', data=data)
     assert result.get_json().get('message') == 'OK'
     assert result.status_code == 201
     with app.app_context():
@@ -98,8 +98,8 @@ def test_upsert_repeated(app):
         assert query_results[3][0].cost == 20
 
 def test_upsert_repeated_and_new(app):
-    data = {'paths':(BytesIO(b'TER,LUA,20\rTER,NET,56'), "exemplo.csv")}
-    result = app.test_client().post('/paths/insert_path', content_type='multipart/form-data', data=data)
+    data = {'map':(BytesIO(b'TER,LUA,20\rTER,NET,56'), "exemplo.csv")}
+    result = app.test_client().post('/paths/insert_map', content_type='multipart/form-data', data=data)
     assert result.get_json().get('message') == 'OK'
     assert result.status_code == 201
     with app.app_context():
